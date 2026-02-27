@@ -1290,3 +1290,386 @@ thinking
 **Planning staged commit and progress append**
 codex
 Using the `commit` skill now to create a conventional commit message for this run and enforce a clean working tree.
+exec
+/bin/zsh -lc 'git add -A && git commit -m "feat(tasks-storage): add local task persistence repo"' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+[main c021ba9] feat(tasks-storage): add local task persistence repo
+ 48 files changed, 12131 insertions(+)
+ create mode 100644 .agents/ralph/PROMPT_build.md
+ create mode 100644 .agents/ralph/README.md
+ create mode 100644 .agents/ralph/agents.sh
+ create mode 100644 .agents/ralph/config.sh
+ create mode 100644 .agents/ralph/diagram.svg
+ create mode 100755 .agents/ralph/log-activity.sh
+ create mode 100755 .agents/ralph/loop.sh
+ create mode 100644 .agents/ralph/ralph.webp
+ create mode 100644 .agents/ralph/references/CONTEXT_ENGINEERING.md
+ create mode 100644 .agents/ralph/references/GUARDRAILS.md
+ create mode 100644 .agents/tasks/prd-nextjs.json
+ create mode 100644 .codex/skills/commit/SKILL.md
+ create mode 100644 .codex/skills/commit/references/commit_examples.md
+ create mode 100644 .codex/skills/dev-browser/SKILL.md
+ create mode 100644 .codex/skills/dev-browser/bun.lock
+ create mode 100644 .codex/skills/dev-browser/package-lock.json
+ create mode 100644 .codex/skills/dev-browser/package.json
+ create mode 100644 .codex/skills/dev-browser/references/scraping.md
+file update:
+diff --git a/lib/taskRepository.ts b/lib/taskRepository.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..1b6ae764a94730925bc467991539d0ea347a7996
+--- /dev/null
++++ b/lib/taskRepository.ts
+@@ -0,0 +1,69 @@
++import { type Task } from "./tasks";
++
++export const TASKS_STORAGE_KEY = "todo-app.tasks";
++
++type StorageLike = Pick<Storage, "getItem" | "setItem">;
++
++const getStorage = (storage?: StorageLike): StorageLike | null => {
++  if (storage) {
++    return storage;
++  }
++
++  if (typeof window === "undefined") {
++    return null;
++  }
++
++  return window.localStorage;
++};
++
++const isTask = (value: unknown): value is Task => {
++  if (typeof value !== "object" || value === null) {
++    return false;
++  }
++
++  const candidate = value as Record<string, unknown>;
++
++  return (
++    typeof candidate.id === "string" &&
++    typeof candidate.title === "string" &&
++    typeof candidate.completed === "boolean" &&
++    typeof candidate.createdAt === "string" &&
++    typeof candidate.updatedAt === "string"
++  );
++};
++
++const isTaskList = (value: unknown): value is Task[] => {
++  return Array.isArray(value) && value.every(isTask);
++};
++
++export function loadTasks(storage?: StorageLike): Task[] {
++  const targetStorage = getStorage(storage);
++  if (!targetStorage) {
++    return [];
++  }
++
++  const rawTasks = targetStorage.getItem(TASKS_STORAGE_KEY);
++  if (rawTasks === null) {
++    return [];
++  }
++
++  try {
++    const parsed = JSON.parse(rawTasks);
++    return isTaskList(parsed) ? parsed : [];
++  } catch {
++    return [];
++  }
++}
++
++export function saveTasks(tasks: readonly Task[], storage?: StorageLike): void {
++  const targetStorage = getStorage(storage);
++  if (!targetStorage) {
++    return;
++  }
++
++  try {
++    targetStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
++  } catch {
++    // Ignore storage write failures (e.g., quota exceeded) to avoid runtime crashes.
++  }
++}
+
+
+thinking
+**Planning progress commit entry**
+exec
+/bin/zsh -lc "date '+%Y-%m-%d %H:%M:%S %Z'" in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+2026-02-27 23:51:01 CET
+file update:
+diff --git a/lib/taskRepository.ts b/lib/taskRepository.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..1b6ae764a94730925bc467991539d0ea347a7996
+--- /dev/null
++++ b/lib/taskRepository.ts
+@@ -0,0 +1,69 @@
++import { type Task } from "./tasks";
++
++export const TASKS_STORAGE_KEY = "todo-app.tasks";
++
++type StorageLike = Pick<Storage, "getItem" | "setItem">;
++
++const getStorage = (storage?: StorageLike): StorageLike | null => {
++  if (storage) {
++    return storage;
++  }
++
++  if (typeof window === "undefined") {
++    return null;
++  }
++
++  return window.localStorage;
++};
++
++const isTask = (value: unknown): value is Task => {
++  if (typeof value !== "object" || value === null) {
++    return false;
++  }
++
++  const candidate = value as Record<string, unknown>;
++
++  return (
++    typeof candidate.id === "string" &&
++    typeof candidate.title === "string" &&
++    typeof candidate.completed === "boolean" &&
++    typeof candidate.createdAt === "string" &&
++    typeof candidate.updatedAt === "string"
++  );
++};
++
++const isTaskList = (value: unknown): value is Task[] => {
++  return Array.isArray(value) && value.every(isTask);
++};
++
++export function loadTasks(storage?: StorageLike): Task[] {
++  const targetStorage = getStorage(storage);
++  if (!targetStorage) {
++    return [];
++  }
++
++  const rawTasks = targetStorage.getItem(TASKS_STORAGE_KEY);
++  if (rawTasks === null) {
++    return [];
++  }
++
++  try {
++    const parsed = JSON.parse(rawTasks);
++    return isTaskList(parsed) ? parsed : [];
++  } catch {
++    return [];
++  }
++}
++
++export function saveTasks(tasks: readonly Task[], storage?: StorageLike): void {
++  const targetStorage = getStorage(storage);
++  if (!targetStorage) {
++    return;
++  }
++
++  try {
++    targetStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
++  } catch {
++    // Ignore storage write failures (e.g., quota exceeded) to avoid runtime crashes.
++  }
++}
+
+
+thinking
+**Appending log entry**
+exec
+/bin/zsh -lc "cat <<'EOF' >> .ralph/progress.md
+## [2026-02-27 23:51:01 CET] - US-002: Implement local persistence repository for tasks
+Thread: 
+Run: 20260227-234913-76351 (iteration 1)
+Run log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-234913-76351-iter-1.log
+Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-234913-76351-iter-1.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: c021ba9 feat(tasks-storage): add local task persistence repo
+- Post-commit status: clean
+- Verification:
+  - Command: npm run lint -> PASS
+  - Command: npm run build -> PASS
+  - Command: npm run dev -> PASS
+- Files changed:
+  - lib/taskRepository.ts
+  - .ralph/activity.log
+  - .ralph/progress.md
+- What was implemented
+  - Added "'`lib/taskRepository.ts` with a stable storage key (`todo-app.tasks`) and repository helpers `loadTasks` and `saveTasks`.
+  - `loadTasks` now returns `[]` when storage is unavailable, key is missing, JSON is corrupted, or parsed payload is not a valid task array.
+  - `saveTasks` serializes tasks to localStorage and safely handles storage write failures to avoid runtime crashes.
+- **Learnings for future iterations:**
+  - Patterns discovered
+  - Repository helpers accept optional injected storage, which makes SSR-safe usage and future testing straightforward.
+  - Gotchas encountered
+  - `npm run lint` includes pre-existing warnings under `.codex/skills/dev-browser`; no lint errors in app story scope.
+  - Useful context
+  - Task domain typing from `lib/tasks.ts` can be reused as runtime guard shape for persistence parsing.
+---
+EOF' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+
+file update:
+diff --git a/lib/taskRepository.ts b/lib/taskRepository.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..1b6ae764a94730925bc467991539d0ea347a7996
+--- /dev/null
++++ b/lib/taskRepository.ts
+@@ -0,0 +1,69 @@
++import { type Task } from "./tasks";
++
++export const TASKS_STORAGE_KEY = "todo-app.tasks";
++
++type StorageLike = Pick<Storage, "getItem" | "setItem">;
++
++const getStorage = (storage?: StorageLike): StorageLike | null => {
++  if (storage) {
++    return storage;
++  }
++
++  if (typeof window === "undefined") {
++    return null;
++  }
++
++  return window.localStorage;
++};
++
++const isTask = (value: unknown): value is Task => {
++  if (typeof value !== "object" || value === null) {
++    return false;
++  }
++
++  const candidate = value as Record<string, unknown>;
++
++  return (
++    typeof candidate.id === "string" &&
++    typeof candidate.title === "string" &&
++    typeof candidate.completed === "boolean" &&
++    typeof candidate.createdAt === "string" &&
++    typeof candidate.updatedAt === "string"
++  );
++};
++
++const isTaskList = (value: unknown): value is Task[] => {
++  return Array.isArray(value) && value.every(isTask);
++};
++
++export function loadTasks(storage?: StorageLike): Task[] {
++  const targetStorage = getStorage(storage);
++  if (!targetStorage) {
++    return [];
++  }
++
++  const rawTasks = targetStorage.getItem(TASKS_STORAGE_KEY);
++  if (rawTasks === null) {
++    return [];
++  }
++
++  try {
++    const parsed = JSON.parse(rawTasks);
++    return isTaskList(parsed) ? parsed : [];
++  } catch {
++    return [];
++  }
++}
++
++export function saveTasks(tasks: readonly Task[], storage?: StorageLike): void {
++  const targetStorage = getStorage(storage);
++  if (!targetStorage) {
++    return;
++  }
++
++  try {
++    targetStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
++  } catch {
++    // Ignore storage write failures (e.g., quota exceeded) to avoid runtime crashes.
++  }
++}
+
+
+thinking
+**Adding post-update logging**
+exec
+/bin/zsh -lc 'ralph log "Updated progress log for US-002 with commit and verification details"' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+Using local templates: /Users/madsjorgensen/Projects/ralph/my-app/.agents/ralph
+file update:
+diff --git a/lib/taskRepository.ts b/lib/taskRepository.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..1b6ae764a94730925bc467991539d0ea347a7996
+--- /dev/null
++++ b/lib/taskRepository.ts
+@@ -0,0 +1,69 @@
++import { type Task } from "./tasks";
++
++export const TASKS_STORAGE_KEY = "todo-app.tasks";
++
++type StorageLike = Pick<Storage, "getItem" | "setItem">;
++
++const getStorage = (storage?: StorageLike): StorageLike | null => {
++  if (storage) {
++    return storage;
++  }
++
++  if (typeof window === "undefined") {
++    return null;
++  }
++
++  return window.localStorage;
++};
++
++const isTask = (value: unknown): value is Task => {
++  if (typeof value !== "object" || value === null) {
++    return false;
++  }
++
++  const candidate = value as Record<string, unknown>;
++
++  return (
++    typeof candidate.id === "string" &&
++    typeof candidate.title === "string" &&
++    typeof candidate.completed === "boolean" &&
++    typeof candidate.createdAt === "string" &&
++    typeof candidate.updatedAt === "string"
++  );
++};
++
++const isTaskList = (value: unknown): value is Task[] => {
++  return Array.isArray(value) && value.every(isTask);
++};
++
++export function loadTasks(storage?: StorageLike): Task[] {
++  const targetStorage = getStorage(storage);
++  if (!targetStorage) {
++    return [];
++  }
++
++  const rawTasks = targetStorage.getItem(TASKS_STORAGE_KEY);
++  if (rawTasks === null) {
++    return [];
++  }
++
++  try {
++    const parsed = JSON.parse(rawTasks);
++    return isTaskList(parsed) ? parsed : [];
++  } catch {
++    return [];
++  }
++}
++
++export function saveTasks(tasks: readonly Task[], storage?: StorageLike): void {
++  const targetStorage = getStorage(storage);
++  if (!targetStorage) {
++    return;
++  }
++
++  try {
++    targetStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
++  } catch {
++    // Ignore storage write failures (e.g., quota exceeded) to avoid runtime crashes.
++  }
++}
+
+
+thinking
+**Committing progress updates**
+codex
+I’ve appended the required progress entry and activity log update; I’m making a final commit so those run artifacts are included and the tree is clean.

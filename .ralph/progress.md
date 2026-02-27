@@ -39,3 +39,32 @@ Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227
   - Useful context
   - Next.js scaffold had no prior task domain, so `lib/tasks.ts` is the initial source-of-truth module.
 ---
+## [2026-02-27 23:51:01 CET] - US-002: Implement local persistence repository for tasks
+Thread: 
+Run: 20260227-234913-76351 (iteration 1)
+Run log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-234913-76351-iter-1.log
+Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-234913-76351-iter-1.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: c021ba9 feat(tasks-storage): add local task persistence repo
+- Post-commit status: clean
+- Verification:
+  - Command: npm run lint -> PASS
+  - Command: npm run build -> PASS
+  - Command: npm run dev -> PASS
+- Files changed:
+  - lib/taskRepository.ts
+  - .ralph/activity.log
+  - .ralph/progress.md
+- What was implemented
+  - Added `lib/taskRepository.ts` with a stable storage key (`todo-app.tasks`) and repository helpers `loadTasks` and `saveTasks`.
+  - `loadTasks` now returns `[]` when storage is unavailable, key is missing, JSON is corrupted, or parsed payload is not a valid task array.
+  - `saveTasks` serializes tasks to localStorage and safely handles storage write failures to avoid runtime crashes.
+- **Learnings for future iterations:**
+  - Patterns discovered
+  - Repository helpers accept optional injected storage, which makes SSR-safe usage and future testing straightforward.
+  - Gotchas encountered
+  - `npm run lint` includes pre-existing warnings under `.codex/skills/dev-browser`; no lint errors in app story scope.
+  - Useful context
+  - Task domain typing from `lib/tasks.ts` can be reused as runtime guard shape for persistence parsing.
+---

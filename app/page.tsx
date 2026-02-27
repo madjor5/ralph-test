@@ -2,12 +2,15 @@
 
 import { FormEvent, useEffect, useId, useState } from "react";
 import { loadTasks, saveTasks } from "@/lib/taskRepository";
-import { createTask, type Task } from "@/lib/tasks";
+import { createTask, type Task, toggleTaskCompletion } from "@/lib/tasks";
+
+type TaskFilter = "all" | "active" | "completed";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>(() => loadTasks());
   const [titleInput, setTitleInput] = useState("");
   const [validationMessage, setValidationMessage] = useState<string | null>(null);
+  const [filter, setFilter] = useState<TaskFilter>("all");
   const validationId = useId();
 
   useEffect(() => {
@@ -26,6 +29,38 @@ export default function Home() {
     setTasks((currentTasks) => [...currentTasks, taskResult.value]);
     setTitleInput("");
     setValidationMessage(null);
+  };
+
+  const handleToggleTask = (taskId: string) => {
+    setTasks((currentTasks) => toggleTaskCompletion(currentTasks, taskId).value);
+  };
+
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === "active") {
+      return !task.completed;
+    }
+
+    if (filter === "completed") {
+      return task.completed;
+    }
+
+    return true;
+  });
+
+  const getEmptyStateMessage = () => {
+    if (tasks.length === 0) {
+      return "No tasks yet. Add your first todo above.";
+    }
+
+    if (filter === "active") {
+      return "No active tasks right now.";
+    }
+
+    if (filter === "completed") {
+      return "No completed tasks yet.";
+    }
+
+    return "No tasks available.";
   };
 
   return (
@@ -74,14 +109,38 @@ export default function Home() {
         </form>
 
         <section className="mt-8">
-          <h2 className="text-lg font-semibold">Tasks</h2>
-          {tasks.length === 0 ? (
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold">Tasks</h2>
+            <div className="flex items-center gap-2">
+              {(["all", "active", "completed"] as const).map((option) => {
+                const isActive = filter === option;
+
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => setFilter(option)}
+                    aria-pressed={isActive}
+                    className={`rounded-full border px-3 py-1 text-sm font-medium transition ${
+                      isActive
+                        ? "border-slate-900 bg-slate-900 text-white"
+                        : "border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:text-slate-900"
+                    }`}
+                  >
+                    {option[0].toUpperCase()}
+                    {option.slice(1)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          {filteredTasks.length === 0 ? (
             <p className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
-              No tasks yet. Add your first todo above.
+              {getEmptyStateMessage()}
             </p>
           ) : (
             <ul className="mt-3 space-y-2">
-              {tasks.map((task) => (
+              {filteredTasks.map((task) => (
                 <li
                   key={task.id}
                   className="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3"
@@ -90,11 +149,13 @@ export default function Home() {
                     <input
                       type="checkbox"
                       checked={task.completed}
-                      readOnly
+                      onChange={() => handleToggleTask(task.id)}
                       aria-label={`Completion status for ${task.title}`}
                       className="h-4 w-4"
                     />
-                    <span>{task.title}</span>
+                    <span className={task.completed ? "text-slate-500 line-through" : ""}>
+                      {task.title}
+                    </span>
                   </div>
                 </li>
               ))}

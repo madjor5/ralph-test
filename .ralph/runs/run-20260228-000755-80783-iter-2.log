@@ -2298,3 +2298,600 @@ I’ve completed implementation and verification, and I’m now committing using
 
 thinking
 **Committing current progress**
+exec
+/bin/zsh -lc "git add -A && git commit -m \"feat(tasks): add summary and clear completed\\n\\nImplement US-006 task management enhancements on /:\\n- add total/active/completed summary counts\\n- add clear-completed bulk action with no-op behavior\\n- keep counts and filtered views accurate after cleanup\\n\\nVerification: npm run lint, npm run build, browser flow check\"" in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+[main 7e3325a] feat(tasks): add summary and clear completed\n\nImplement US-006 task management enhancements on /:\n- add total/active/completed summary counts\n- add clear-completed bulk action with no-op behavior\n- keep counts and filtered views accurate after cleanup\n\nVerification: npm run lint, npm run build, browser flow check
+ 11 files changed, 2980 insertions(+), 5 deletions(-)
+ create mode 100644 .ralph/.tmp/prompt-20260228-000755-80783-2.md
+ create mode 100644 .ralph/.tmp/story-20260228-000755-80783-2.json
+ create mode 100644 .ralph/.tmp/story-20260228-000755-80783-2.md
+ create mode 100644 .ralph/runs/run-20260228-000755-80783-iter-1.md
+ create mode 100644 .ralph/runs/run-20260228-000755-80783-iter-2.log
+file update:
+diff --git a/app/page.tsx b/app/page.tsx
+index 5251fed0ec5aae851187bd590c846ea8183f4b14..527eae15f46e25e3d62bcae42adf1cd9c67b259e
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -3,6 +3,7 @@
+ import { FormEvent, useEffect, useId, useState } from "react";
+ import { loadTasks, saveTasks } from "@/lib/taskRepository";
+ import {
++  clearCompletedTasks,
+   createTask,
+   deleteTaskById,
+   type Task,
+@@ -96,7 +97,13 @@
+ 
+     return true;
+   });
++  const completedTasksCount = tasks.filter((task) => task.completed).length;
++  const activeTasksCount = tasks.length - completedTasksCount;
+ 
++  const handleClearCompleted = () => {
++    setTasks((currentTasks) => clearCompletedTasks(currentTasks).value);
++  };
++
+   const getEmptyStateMessage = () => {
+     if (tasks.length === 0) {
+       return "No tasks yet. Add your first todo above.";
+@@ -184,6 +191,20 @@
+               })}
+             </div>
+           </div>
++          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
++            <p>
++              Total: <span className="font-semibold">{tasks.length}</span> | Active:{" "}
++              <span className="font-semibold">{activeTasksCount}</span> | Completed:{" "}
++              <span className="font-semibold">{completedTasksCount}</span>
++            </p>
++            <button
++              type="button"
++              onClick={handleClearCompleted}
++              className="rounded-lg border border-slate-300 px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
++            >
++              Clear completed
++            </button>
++          </div>
+           {filteredTasks.length === 0 ? (
+             <p className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
+               {getEmptyStateMessage()}
+diff --git a/lib/tasks.ts b/lib/tasks.ts
+index cd1016f07a5b6217465e492b91f46dd19563a527..3dbde48cc62484265fe6a1b8069ac8caff11d3a0
+--- a/lib/tasks.ts
++++ b/lib/tasks.ts
+@@ -166,3 +166,14 @@
+     deleted: nextTasks.length !== tasks.length,
+   };
+ }
++
++export function clearCompletedTasks(
++  tasks: readonly Task[],
++): { value: Task[]; cleared: boolean } {
++  const nextTasks = tasks.filter((task) => !task.completed);
++
++  return {
++    value: nextTasks,
++    cleared: nextTasks.length !== tasks.length,
++  };
++}
+
+
+thinking
+**Planning progress entry format**
+codex
+The main story commit is in place. I’m now appending the required US-006 progress record with run details and verification evidence, then logging that activity and making the final progress commit to leave the tree clean.
+exec
+/bin/zsh -lc 'tail -n 80 .ralph/progress.md' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc "date '+%Y-%m-%d %H:%M:%S %z'" in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc 'git show -s --format="%h %s" HEAD' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+2026-02-28 00:18:53 +0100
+ succeeded in 52ms:
+  - Verified UI behavior in browser for empty state, successful create (`Finish report`), and invalid submission handling.
+- **Learnings for future iterations:**
+  - Patterns discovered
+  - Reusing domain/repository utilities in client UI keeps story scope tight and consistent.
+  - Gotchas encountered
+  - Dev-browser startup may install Playwright and can leave profile/cache artifacts that should be removed before final commit.
+  - Useful context
+  - Lint currently reports non-blocking warnings inside `.codex/skills/dev-browser`; app code must remain warning/error free for required gates.
+---
+## [2026-02-28 00:05:30 CET] - US-004: Add complete/incomplete toggling and status filters
+Thread: 
+Run: 20260227-235951-78972 (iteration 1)
+Run log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-235951-78972-iter-1.log
+Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-235951-78972-iter-1.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: 3c2205c feat(todos): add completion toggle and filters
+- Post-commit status: M .ralph/runs/run-20260227-235951-78972-iter-1.log
+- Verification:
+  - Command: npm run lint -> PASS
+ succeeded in 52ms:
+7e3325a feat(tasks): add summary and clear completed\n\nImplement US-006 task management enhancements on /:\n- add total/active/completed summary counts\n- add clear-completed bulk action with no-op behavior\n- keep counts and filtered views accurate after cleanup\n\nVerification: npm run lint, npm run build, browser flow check
+file update:
+diff --git a/app/page.tsx b/app/page.tsx
+index 5251fed0ec5aae851187bd590c846ea8183f4b14..527eae15f46e25e3d62bcae42adf1cd9c67b259e
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -3,6 +3,7 @@
+ import { FormEvent, useEffect, useId, useState } from "react";
+ import { loadTasks, saveTasks } from "@/lib/taskRepository";
+ import {
++  clearCompletedTasks,
+   createTask,
+   deleteTaskById,
+   type Task,
+@@ -96,7 +97,13 @@
+ 
+     return true;
+   });
++  const completedTasksCount = tasks.filter((task) => task.completed).length;
++  const activeTasksCount = tasks.length - completedTasksCount;
+ 
++  const handleClearCompleted = () => {
++    setTasks((currentTasks) => clearCompletedTasks(currentTasks).value);
++  };
++
+   const getEmptyStateMessage = () => {
+     if (tasks.length === 0) {
+       return "No tasks yet. Add your first todo above.";
+@@ -184,6 +191,20 @@
+               })}
+             </div>
+           </div>
++          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
++            <p>
++              Total: <span className="font-semibold">{tasks.length}</span> | Active:{" "}
++              <span className="font-semibold">{activeTasksCount}</span> | Completed:{" "}
++              <span className="font-semibold">{completedTasksCount}</span>
++            </p>
++            <button
++              type="button"
++              onClick={handleClearCompleted}
++              className="rounded-lg border border-slate-300 px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
++            >
++              Clear completed
++            </button>
++          </div>
+           {filteredTasks.length === 0 ? (
+             <p className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
+               {getEmptyStateMessage()}
+diff --git a/lib/tasks.ts b/lib/tasks.ts
+index cd1016f07a5b6217465e492b91f46dd19563a527..3dbde48cc62484265fe6a1b8069ac8caff11d3a0
+--- a/lib/tasks.ts
++++ b/lib/tasks.ts
+@@ -166,3 +166,14 @@
+     deleted: nextTasks.length !== tasks.length,
+   };
+ }
++
++export function clearCompletedTasks(
++  tasks: readonly Task[],
++): { value: Task[]; cleared: boolean } {
++  const nextTasks = tasks.filter((task) => !task.completed);
++
++  return {
++    value: nextTasks,
++    cleared: nextTasks.length !== tasks.length,
++  };
++}
+
+
+thinking
+**Checking repository status before append**
+exec
+/bin/zsh -lc 'git status --porcelain' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+ M .ralph/runs/run-20260228-000755-80783-iter-2.log
+file update:
+diff --git a/app/page.tsx b/app/page.tsx
+index 5251fed0ec5aae851187bd590c846ea8183f4b14..527eae15f46e25e3d62bcae42adf1cd9c67b259e
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -3,6 +3,7 @@
+ import { FormEvent, useEffect, useId, useState } from "react";
+ import { loadTasks, saveTasks } from "@/lib/taskRepository";
+ import {
++  clearCompletedTasks,
+   createTask,
+   deleteTaskById,
+   type Task,
+@@ -96,7 +97,13 @@
+ 
+     return true;
+   });
++  const completedTasksCount = tasks.filter((task) => task.completed).length;
++  const activeTasksCount = tasks.length - completedTasksCount;
+ 
++  const handleClearCompleted = () => {
++    setTasks((currentTasks) => clearCompletedTasks(currentTasks).value);
++  };
++
+   const getEmptyStateMessage = () => {
+     if (tasks.length === 0) {
+       return "No tasks yet. Add your first todo above.";
+@@ -184,6 +191,20 @@
+               })}
+             </div>
+           </div>
++          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
++            <p>
++              Total: <span className="font-semibold">{tasks.length}</span> | Active:{" "}
++              <span className="font-semibold">{activeTasksCount}</span> | Completed:{" "}
++              <span className="font-semibold">{completedTasksCount}</span>
++            </p>
++            <button
++              type="button"
++              onClick={handleClearCompleted}
++              className="rounded-lg border border-slate-300 px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
++            >
++              Clear completed
++            </button>
++          </div>
+           {filteredTasks.length === 0 ? (
+             <p className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
+               {getEmptyStateMessage()}
+diff --git a/lib/tasks.ts b/lib/tasks.ts
+index cd1016f07a5b6217465e492b91f46dd19563a527..3dbde48cc62484265fe6a1b8069ac8caff11d3a0
+--- a/lib/tasks.ts
++++ b/lib/tasks.ts
+@@ -166,3 +166,14 @@
+     deleted: nextTasks.length !== tasks.length,
+   };
+ }
++
++export function clearCompletedTasks(
++  tasks: readonly Task[],
++): { value: Task[]; cleared: boolean } {
++  const nextTasks = tasks.filter((task) => !task.completed);
++
++  return {
++    value: nextTasks,
++    cleared: nextTasks.length !== tasks.length,
++  };
++}
+
+
+thinking
+**Planning precise post-commit log entry**
+exec
+/bin/zsh -lc 'git show --name-only --pretty="" HEAD' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+.agents/tasks/prd-nextjs.json
+.ralph/.tmp/prompt-20260228-000755-80783-2.md
+.ralph/.tmp/story-20260228-000755-80783-2.json
+.ralph/.tmp/story-20260228-000755-80783-2.md
+.ralph/activity.log
+.ralph/errors.log
+.ralph/runs/run-20260228-000755-80783-iter-1.log
+.ralph/runs/run-20260228-000755-80783-iter-1.md
+.ralph/runs/run-20260228-000755-80783-iter-2.log
+app/page.tsx
+lib/tasks.ts
+file update:
+diff --git a/app/page.tsx b/app/page.tsx
+index 5251fed0ec5aae851187bd590c846ea8183f4b14..527eae15f46e25e3d62bcae42adf1cd9c67b259e
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -3,6 +3,7 @@
+ import { FormEvent, useEffect, useId, useState } from "react";
+ import { loadTasks, saveTasks } from "@/lib/taskRepository";
+ import {
++  clearCompletedTasks,
+   createTask,
+   deleteTaskById,
+   type Task,
+@@ -96,7 +97,13 @@
+ 
+     return true;
+   });
++  const completedTasksCount = tasks.filter((task) => task.completed).length;
++  const activeTasksCount = tasks.length - completedTasksCount;
+ 
++  const handleClearCompleted = () => {
++    setTasks((currentTasks) => clearCompletedTasks(currentTasks).value);
++  };
++
+   const getEmptyStateMessage = () => {
+     if (tasks.length === 0) {
+       return "No tasks yet. Add your first todo above.";
+@@ -184,6 +191,20 @@
+               })}
+             </div>
+           </div>
++          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
++            <p>
++              Total: <span className="font-semibold">{tasks.length}</span> | Active:{" "}
++              <span className="font-semibold">{activeTasksCount}</span> | Completed:{" "}
++              <span className="font-semibold">{completedTasksCount}</span>
++            </p>
++            <button
++              type="button"
++              onClick={handleClearCompleted}
++              className="rounded-lg border border-slate-300 px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
++            >
++              Clear completed
++            </button>
++          </div>
+           {filteredTasks.length === 0 ? (
+             <p className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
+               {getEmptyStateMessage()}
+diff --git a/lib/tasks.ts b/lib/tasks.ts
+index cd1016f07a5b6217465e492b91f46dd19563a527..3dbde48cc62484265fe6a1b8069ac8caff11d3a0
+--- a/lib/tasks.ts
++++ b/lib/tasks.ts
+@@ -166,3 +166,14 @@
+     deleted: nextTasks.length !== tasks.length,
+   };
+ }
++
++export function clearCompletedTasks(
++  tasks: readonly Task[],
++): { value: Task[]; cleared: boolean } {
++  const nextTasks = tasks.filter((task) => !task.completed);
++
++  return {
++    value: nextTasks,
++    cleared: nextTasks.length !== tasks.length,
++  };
++}
+
+
+thinking
+**Appending new entry**
+exec
+/bin/zsh -lc "cat <<'EOF' >> .ralph/progress.md
+## [2026-02-28 00:18:53 +0100] - US-006: Add task summary and clear-completed action
+Thread: 
+Run: 20260228-000755-80783 (iteration 2)
+Run log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260228-000755-80783-iter-2.log
+Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260228-000755-80783-iter-2.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: 7e3325a feat(tasks): add summary and clear completed
+- Post-commit status: .ralph/runs/run-20260228-000755-80783-iter-2.log
+- Verification:
+  - Command: npm run lint -> PASS
+  - Command: npm run build -> PASS
+  - Command: cd .codex/skills/dev-browser && npx tsx <<'EOF' ... EOF -> PASS
+- Files changed:
+  - app/page.tsx
+  - lib/tasks.ts
+  - .ralph/activity.log
+  - .ralph/progress.md
+  - .ralph/runs/run-20260228-000755-80783-iter-2.log
+- What was implemented
+  - Added summary counts on "'`/` for total, active, and completed tasks.
+  - Added `clearCompletedTasks` mutation helper in `lib/tasks.ts` and wired a `Clear completed` action in the UI.
+  - Ensured clearing completed tasks updates counts and filtered views consistently.
+  - Verified the acceptance example in browser: 5 tasks with 3 completed, clear completed leaves 2 active tasks.
+  - Verified negative no-op case in browser: triggering clear-completed with zero completed keeps counts unchanged and throws no errors.
+- **Learnings for future iterations:**
+  - Patterns discovered
+  - Keep derived summary counts computed from canonical `tasks` state so filters and counts stay in sync after mutations.
+  - Gotchas encountered
+  - Browser verification can generate local artifacts; clean temporary dev-browser folders before final commit.
+  - Useful context
+  - In this environment, `ralph` is available via PATH (`/opt/homebrew/bin/ralph`) rather than a repo-local executable.
+---
+EOF' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+
+file update:
+diff --git a/app/page.tsx b/app/page.tsx
+index 5251fed0ec5aae851187bd590c846ea8183f4b14..527eae15f46e25e3d62bcae42adf1cd9c67b259e
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -3,6 +3,7 @@
+ import { FormEvent, useEffect, useId, useState } from "react";
+ import { loadTasks, saveTasks } from "@/lib/taskRepository";
+ import {
++  clearCompletedTasks,
+   createTask,
+   deleteTaskById,
+   type Task,
+@@ -96,7 +97,13 @@
+ 
+     return true;
+   });
++  const completedTasksCount = tasks.filter((task) => task.completed).length;
++  const activeTasksCount = tasks.length - completedTasksCount;
+ 
++  const handleClearCompleted = () => {
++    setTasks((currentTasks) => clearCompletedTasks(currentTasks).value);
++  };
++
+   const getEmptyStateMessage = () => {
+     if (tasks.length === 0) {
+       return "No tasks yet. Add your first todo above.";
+@@ -184,6 +191,20 @@
+               })}
+             </div>
+           </div>
++          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
++            <p>
++              Total: <span className="font-semibold">{tasks.length}</span> | Active:{" "}
++              <span className="font-semibold">{activeTasksCount}</span> | Completed:{" "}
++              <span className="font-semibold">{completedTasksCount}</span>
++            </p>
++            <button
++              type="button"
++              onClick={handleClearCompleted}
++              className="rounded-lg border border-slate-300 px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
++            >
++              Clear completed
++            </button>
++          </div>
+           {filteredTasks.length === 0 ? (
+             <p className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
+               {getEmptyStateMessage()}
+diff --git a/lib/tasks.ts b/lib/tasks.ts
+index cd1016f07a5b6217465e492b91f46dd19563a527..3dbde48cc62484265fe6a1b8069ac8caff11d3a0
+--- a/lib/tasks.ts
++++ b/lib/tasks.ts
+@@ -166,3 +166,14 @@
+     deleted: nextTasks.length !== tasks.length,
+   };
+ }
++
++export function clearCompletedTasks(
++  tasks: readonly Task[],
++): { value: Task[]; cleared: boolean } {
++  const nextTasks = tasks.filter((task) => !task.completed);
++
++  return {
++    value: nextTasks,
++    cleared: nextTasks.length !== tasks.length,
++  };
++}
+
+
+thinking
+**Adding activity logging after progress update**
+exec
+/bin/zsh -lc 'ralph log "US-006 iteration 2: progress entry appended to .ralph/progress.md"' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+Using local templates: /Users/madsjorgensen/Projects/ralph/my-app/.agents/ralph
+file update:
+diff --git a/app/page.tsx b/app/page.tsx
+index 5251fed0ec5aae851187bd590c846ea8183f4b14..527eae15f46e25e3d62bcae42adf1cd9c67b259e
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -3,6 +3,7 @@
+ import { FormEvent, useEffect, useId, useState } from "react";
+ import { loadTasks, saveTasks } from "@/lib/taskRepository";
+ import {
++  clearCompletedTasks,
+   createTask,
+   deleteTaskById,
+   type Task,
+@@ -96,7 +97,13 @@
+ 
+     return true;
+   });
++  const completedTasksCount = tasks.filter((task) => task.completed).length;
++  const activeTasksCount = tasks.length - completedTasksCount;
+ 
++  const handleClearCompleted = () => {
++    setTasks((currentTasks) => clearCompletedTasks(currentTasks).value);
++  };
++
+   const getEmptyStateMessage = () => {
+     if (tasks.length === 0) {
+       return "No tasks yet. Add your first todo above.";
+@@ -184,6 +191,20 @@
+               })}
+             </div>
+           </div>
++          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
++            <p>
++              Total: <span className="font-semibold">{tasks.length}</span> | Active:{" "}
++              <span className="font-semibold">{activeTasksCount}</span> | Completed:{" "}
++              <span className="font-semibold">{completedTasksCount}</span>
++            </p>
++            <button
++              type="button"
++              onClick={handleClearCompleted}
++              className="rounded-lg border border-slate-300 px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
++            >
++              Clear completed
++            </button>
++          </div>
+           {filteredTasks.length === 0 ? (
+             <p className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
+               {getEmptyStateMessage()}
+diff --git a/lib/tasks.ts b/lib/tasks.ts
+index cd1016f07a5b6217465e492b91f46dd19563a527..3dbde48cc62484265fe6a1b8069ac8caff11d3a0
+--- a/lib/tasks.ts
++++ b/lib/tasks.ts
+@@ -166,3 +166,14 @@
+     deleted: nextTasks.length !== tasks.length,
+   };
+ }
++
++export function clearCompletedTasks(
++  tasks: readonly Task[],
++): { value: Task[]; cleared: boolean } {
++  const nextTasks = tasks.filter((task) => !task.completed);
++
++  return {
++    value: nextTasks,
++    cleared: nextTasks.length !== tasks.length,
++  };
++}
+
+
+thinking
+**Committing progress updates**
+exec
+/bin/zsh -lc 'git status --short' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 50ms:
+ M .ralph/activity.log
+ M .ralph/progress.md
+ M .ralph/runs/run-20260228-000755-80783-iter-2.log
+file update:
+diff --git a/app/page.tsx b/app/page.tsx
+index 5251fed0ec5aae851187bd590c846ea8183f4b14..527eae15f46e25e3d62bcae42adf1cd9c67b259e
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -3,6 +3,7 @@
+ import { FormEvent, useEffect, useId, useState } from "react";
+ import { loadTasks, saveTasks } from "@/lib/taskRepository";
+ import {
++  clearCompletedTasks,
+   createTask,
+   deleteTaskById,
+   type Task,
+@@ -96,7 +97,13 @@
+ 
+     return true;
+   });
++  const completedTasksCount = tasks.filter((task) => task.completed).length;
++  const activeTasksCount = tasks.length - completedTasksCount;
+ 
++  const handleClearCompleted = () => {
++    setTasks((currentTasks) => clearCompletedTasks(currentTasks).value);
++  };
++
+   const getEmptyStateMessage = () => {
+     if (tasks.length === 0) {
+       return "No tasks yet. Add your first todo above.";
+@@ -184,6 +191,20 @@
+               })}
+             </div>
+           </div>
++          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
++            <p>
++              Total: <span className="font-semibold">{tasks.length}</span> | Active:{" "}
++              <span className="font-semibold">{activeTasksCount}</span> | Completed:{" "}
++              <span className="font-semibold">{completedTasksCount}</span>
++            </p>
++            <button
++              type="button"
++              onClick={handleClearCompleted}
++              className="rounded-lg border border-slate-300 px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
++            >
++              Clear completed
++            </button>
++          </div>
+           {filteredTasks.length === 0 ? (
+             <p className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
+               {getEmptyStateMessage()}
+diff --git a/lib/tasks.ts b/lib/tasks.ts
+index cd1016f07a5b6217465e492b91f46dd19563a527..3dbde48cc62484265fe6a1b8069ac8caff11d3a0
+--- a/lib/tasks.ts
++++ b/lib/tasks.ts
+@@ -166,3 +166,14 @@
+     deleted: nextTasks.length !== tasks.length,
+   };
+ }
++
++export function clearCompletedTasks(
++  tasks: readonly Task[],
++): { value: Task[]; cleared: boolean } {
++  const nextTasks = tasks.filter((task) => !task.completed);
++
++  return {
++    value: nextTasks,
++    cleared: nextTasks.length !== tasks.length,
++  };
++}
+
+
+thinking
+**Committing second update**

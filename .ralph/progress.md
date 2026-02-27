@@ -177,3 +177,36 @@ Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260228
   - Useful context
   - `ralph` activity logging command is available as `/opt/homebrew/bin/ralph` in this environment.
 ---
+## [2026-02-28 00:18:53 +0100] - US-006: Add task summary and clear-completed action
+Thread: 
+Run: 20260228-000755-80783 (iteration 2)
+Run log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260228-000755-80783-iter-2.log
+Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260228-000755-80783-iter-2.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: 7e3325a feat(tasks): add summary and clear completed
+- Post-commit status: .ralph/runs/run-20260228-000755-80783-iter-2.log
+- Verification:
+  - Command: npm run lint -> PASS
+  - Command: npm run build -> PASS
+  - Command: cd .codex/skills/dev-browser && npx tsx <<'EOF' ... EOF -> PASS
+- Files changed:
+  - app/page.tsx
+  - lib/tasks.ts
+  - .ralph/activity.log
+  - .ralph/progress.md
+  - .ralph/runs/run-20260228-000755-80783-iter-2.log
+- What was implemented
+  - Added summary counts on `/` for total, active, and completed tasks.
+  - Added `clearCompletedTasks` mutation helper in `lib/tasks.ts` and wired a `Clear completed` action in the UI.
+  - Ensured clearing completed tasks updates counts and filtered views consistently.
+  - Verified the acceptance example in browser: 5 tasks with 3 completed, clear completed leaves 2 active tasks.
+  - Verified negative no-op case in browser: triggering clear-completed with zero completed keeps counts unchanged and throws no errors.
+- **Learnings for future iterations:**
+  - Patterns discovered
+  - Keep derived summary counts computed from canonical `tasks` state so filters and counts stay in sync after mutations.
+  - Gotchas encountered
+  - Browser verification can generate local artifacts; clean temporary dev-browser folders before final commit.
+  - Useful context
+  - In this environment, `ralph` is available via PATH (`/opt/homebrew/bin/ralph`) rather than a repo-local executable.
+---

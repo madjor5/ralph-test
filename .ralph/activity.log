@@ -1,6 +1,7 @@
 # Activity Log
 
 ## Run Summary
+- 2026-02-28 00:06:18 | run=20260227-235951-78972 | iter=1 | mode=build | story=US-004 | duration=387s | status=success
 - 2026-02-27 23:57:59 | run=20260227-235223-77231 | iter=1 | mode=build | story=US-003 | duration=336s | status=success
 - 2026-02-27 23:51:29 | run=20260227-234913-76351 | iter=1 | mode=build | story=US-002 | duration=136s | status=success
 - 2026-02-27 23:41:40 | run=20260227-233940-75253 | iter=1 | mode=build | story=US-001 | duration=120s | status=success
@@ -32,3 +33,9 @@
 [2026-02-28 00:04:23] US-004: verification complete (lint, build, dev runtime check, browser filter/toggle assertions)
 [2026-02-28 00:05:04] US-004: completed pre-commit security/performance/regression review
 [2026-02-28 00:05:49] US-004: updated .ralph/progress.md with commit and verification details
+[2026-02-28 00:06:18] ITERATION 1 end (duration=387s)
+[2026-02-28 00:07:55] ITERATION 1 start (mode=build story=US-005)
+[2026-02-28 00:08:21] US-005 context review complete: guardrails, errors, PRD
+[2026-02-28 00:08:21] Start US-005 work (run 20260228-000755-80783 iter 1)
+[2026-02-28 00:09:05] US-005 major code change: added edit/delete flows in app/page.tsx
+[2026-02-28 00:12:22] US-005 verification complete: lint/build/browser checks passed

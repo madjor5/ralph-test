@@ -104,7 +104,7 @@
     {
       "id": "US-002",
       "title": "Implement local persistence repository for tasks",
-      "status": "in_progress",
+      "status": "done",
       "dependsOn": [
         "US-001"
       ],
@@ -117,13 +117,13 @@
         "Run quality gates: npm run lint and npm run build"
       ],
       "startedAt": "2026-02-27T22:49:14.008092+00:00",
-      "completedAt": null,
-      "updatedAt": "2026-02-27T22:49:14.008256+00:00"
+      "completedAt": "2026-02-27T22:51:29.325533+00:00",
+      "updatedAt": "2026-02-27T22:51:29.325377+00:00"
     },
     {
       "id": "US-003",
       "title": "Build todo UI on root route with core create and list flows",
-      "status": "open",
+      "status": "in_progress",
       "dependsOn": [
         "US-001",
         "US-002"
@@ -136,7 +136,10 @@
         "Example: entering 'Finish report' and submitting displays a new unchecked task row",
         "Negative case: submitting an empty title keeps list unchanged and shows validation feedback",
         "Run quality gates: npm run lint and npm run build"
-      ]
+      ],
+      "startedAt": "2026-02-27T22:52:23.478466+00:00",
+      "completedAt": null,
+      "updatedAt": "2026-02-27T22:52:23.478688+00:00"
     },
     {
       "id": "US-004",

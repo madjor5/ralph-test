@@ -1845,3 +1845,170 @@ thinking
 **Committing updated run log**
 codex
 The run log file auto-updated after the last command, so I’m making one final housekeeping commit to satisfy the clean-tree requirement.
+exec
+/bin/zsh -lc 'git add -A && git commit -m "chore(logs): sync run log updates" && git show -s --format="%h %s" HEAD && git status --porcelain' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+[main 2adc0cd] chore(logs): sync run log updates
+ 1 file changed, 172 insertions(+)
+2adc0cd chore(logs): sync run log updates
+file update:
+diff --git a/lib/taskRepository.ts b/lib/taskRepository.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..1b6ae764a94730925bc467991539d0ea347a7996
+--- /dev/null
++++ b/lib/taskRepository.ts
+@@ -0,0 +1,69 @@
++import { type Task } from "./tasks";
++
++export const TASKS_STORAGE_KEY = "todo-app.tasks";
++
++type StorageLike = Pick<Storage, "getItem" | "setItem">;
++
++const getStorage = (storage?: StorageLike): StorageLike | null => {
++  if (storage) {
++    return storage;
++  }
++
++  if (typeof window === "undefined") {
++    return null;
++  }
++
++  return window.localStorage;
++};
++
++const isTask = (value: unknown): value is Task => {
++  if (typeof value !== "object" || value === null) {
++    return false;
++  }
++
++  const candidate = value as Record<string, unknown>;
++
++  return (
++    typeof candidate.id === "string" &&
++    typeof candidate.title === "string" &&
++    typeof candidate.completed === "boolean" &&
++    typeof candidate.createdAt === "string" &&
++    typeof candidate.updatedAt === "string"
++  );
++};
++
++const isTaskList = (value: unknown): value is Task[] => {
++  return Array.isArray(value) && value.every(isTask);
++};
++
++export function loadTasks(storage?: StorageLike): Task[] {
++  const targetStorage = getStorage(storage);
++  if (!targetStorage) {
++    return [];
++  }
++
++  const rawTasks = targetStorage.getItem(TASKS_STORAGE_KEY);
++  if (rawTasks === null) {
++    return [];
++  }
++
++  try {
++    const parsed = JSON.parse(rawTasks);
++    return isTaskList(parsed) ? parsed : [];
++  } catch {
++    return [];
++  }
++}
++
++export function saveTasks(tasks: readonly Task[], storage?: StorageLike): void {
++  const targetStorage = getStorage(storage);
++  if (!targetStorage) {
++    return;
++  }
++
++  try {
++    targetStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
++  } catch {
++    // Ignore storage write failures (e.g., quota exceeded) to avoid runtime crashes.
++  }
++}
+
+
+thinking
+**Deciding final completion signal output**
+codex
+<promise>COMPLETE</promise>
+file update:
+diff --git a/lib/taskRepository.ts b/lib/taskRepository.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..1b6ae764a94730925bc467991539d0ea347a7996
+--- /dev/null
++++ b/lib/taskRepository.ts
+@@ -0,0 +1,69 @@
++import { type Task } from "./tasks";
++
++export const TASKS_STORAGE_KEY = "todo-app.tasks";
++
++type StorageLike = Pick<Storage, "getItem" | "setItem">;
++
++const getStorage = (storage?: StorageLike): StorageLike | null => {
++  if (storage) {
++    return storage;
++  }
++
++  if (typeof window === "undefined") {
++    return null;
++  }
++
++  return window.localStorage;
++};
++
++const isTask = (value: unknown): value is Task => {
++  if (typeof value !== "object" || value === null) {
++    return false;
++  }
++
++  const candidate = value as Record<string, unknown>;
++
++  return (
++    typeof candidate.id === "string" &&
++    typeof candidate.title === "string" &&
++    typeof candidate.completed === "boolean" &&
++    typeof candidate.createdAt === "string" &&
++    typeof candidate.updatedAt === "string"
++  );
++};
++
++const isTaskList = (value: unknown): value is Task[] => {
++  return Array.isArray(value) && value.every(isTask);
++};
++
++export function loadTasks(storage?: StorageLike): Task[] {
++  const targetStorage = getStorage(storage);
++  if (!targetStorage) {
++    return [];
++  }
++
++  const rawTasks = targetStorage.getItem(TASKS_STORAGE_KEY);
++  if (rawTasks === null) {
++    return [];
++  }
++
++  try {
++    const parsed = JSON.parse(rawTasks);
++    return isTaskList(parsed) ? parsed : [];
++  } catch {
++    return [];
++  }
++}
++
++export function saveTasks(tasks: readonly Task[], storage?: StorageLike): void {
++  const targetStorage = getStorage(storage);
++  if (!targetStorage) {
++    return;
++  }
++
++  try {
++    targetStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
++  } catch {
++    // Ignore storage write failures (e.g., quota exceeded) to avoid runtime crashes.
++  }
++}
+
+tokens used
+27,357
+<promise>COMPLETE</promise>

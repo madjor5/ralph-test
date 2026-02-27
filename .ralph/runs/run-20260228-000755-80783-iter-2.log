@@ -2895,3 +2895,155 @@ index cd1016f07a5b6217465e492b91f46dd19563a527..3dbde48cc62484265fe6a1b8069ac8ca
 
 thinking
 **Committing second update**
+exec
+/bin/zsh -lc "git add -A && git commit -m \"chore(progress): record us-006 run details\\n\\nAppend US-006 progress entry and activity log updates for run 20260228-000755-80783 iteration 2.\"" in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+[main f3024d2] chore(progress): record us-006 run details\n\nAppend US-006 progress entry and activity log updates for run 20260228-000755-80783 iteration 2.
+ 3 files changed, 631 insertions(+)
+file update:
+diff --git a/app/page.tsx b/app/page.tsx
+index 5251fed0ec5aae851187bd590c846ea8183f4b14..527eae15f46e25e3d62bcae42adf1cd9c67b259e
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -3,6 +3,7 @@
+ import { FormEvent, useEffect, useId, useState } from "react";
+ import { loadTasks, saveTasks } from "@/lib/taskRepository";
+ import {
++  clearCompletedTasks,
+   createTask,
+   deleteTaskById,
+   type Task,
+@@ -96,7 +97,13 @@
+ 
+     return true;
+   });
++  const completedTasksCount = tasks.filter((task) => task.completed).length;
++  const activeTasksCount = tasks.length - completedTasksCount;
+ 
++  const handleClearCompleted = () => {
++    setTasks((currentTasks) => clearCompletedTasks(currentTasks).value);
++  };
++
+   const getEmptyStateMessage = () => {
+     if (tasks.length === 0) {
+       return "No tasks yet. Add your first todo above.";
+@@ -184,6 +191,20 @@
+               })}
+             </div>
+           </div>
++          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
++            <p>
++              Total: <span className="font-semibold">{tasks.length}</span> | Active:{" "}
++              <span className="font-semibold">{activeTasksCount}</span> | Completed:{" "}
++              <span className="font-semibold">{completedTasksCount}</span>
++            </p>
++            <button
++              type="button"
++              onClick={handleClearCompleted}
++              className="rounded-lg border border-slate-300 px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
++            >
++              Clear completed
++            </button>
++          </div>
+           {filteredTasks.length === 0 ? (
+             <p className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
+               {getEmptyStateMessage()}
+diff --git a/lib/tasks.ts b/lib/tasks.ts
+index cd1016f07a5b6217465e492b91f46dd19563a527..3dbde48cc62484265fe6a1b8069ac8caff11d3a0
+--- a/lib/tasks.ts
++++ b/lib/tasks.ts
+@@ -166,3 +166,14 @@
+     deleted: nextTasks.length !== tasks.length,
+   };
+ }
++
++export function clearCompletedTasks(
++  tasks: readonly Task[],
++): { value: Task[]; cleared: boolean } {
++  const nextTasks = tasks.filter((task) => !task.completed);
++
++  return {
++    value: nextTasks,
++    cleared: nextTasks.length !== tasks.length,
++  };
++}
+
+
+thinking
+**Checking working tree status**
+exec
+/bin/zsh -lc 'git status --porcelain && git show -s --format="%h %s" HEAD' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+ M .ralph/runs/run-20260228-000755-80783-iter-2.log
+f3024d2 chore(progress): record us-006 run details\n\nAppend US-006 progress entry and activity log updates for run 20260228-000755-80783 iteration 2.
+file update:
+diff --git a/app/page.tsx b/app/page.tsx
+index 5251fed0ec5aae851187bd590c846ea8183f4b14..527eae15f46e25e3d62bcae42adf1cd9c67b259e
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -3,6 +3,7 @@
+ import { FormEvent, useEffect, useId, useState } from "react";
+ import { loadTasks, saveTasks } from "@/lib/taskRepository";
+ import {
++  clearCompletedTasks,
+   createTask,
+   deleteTaskById,
+   type Task,
+@@ -96,7 +97,13 @@
+ 
+     return true;
+   });
++  const completedTasksCount = tasks.filter((task) => task.completed).length;
++  const activeTasksCount = tasks.length - completedTasksCount;
+ 
++  const handleClearCompleted = () => {
++    setTasks((currentTasks) => clearCompletedTasks(currentTasks).value);
++  };
++
+   const getEmptyStateMessage = () => {
+     if (tasks.length === 0) {
+       return "No tasks yet. Add your first todo above.";
+@@ -184,6 +191,20 @@
+               })}
+             </div>
+           </div>
++          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
++            <p>
++              Total: <span className="font-semibold">{tasks.length}</span> | Active:{" "}
++              <span className="font-semibold">{activeTasksCount}</span> | Completed:{" "}
++              <span className="font-semibold">{completedTasksCount}</span>
++            </p>
++            <button
++              type="button"
++              onClick={handleClearCompleted}
++              className="rounded-lg border border-slate-300 px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
++            >
++              Clear completed
++            </button>
++          </div>
+           {filteredTasks.length === 0 ? (
+             <p className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">
+               {getEmptyStateMessage()}
+diff --git a/lib/tasks.ts b/lib/tasks.ts
+index cd1016f07a5b6217465e492b91f46dd19563a527..3dbde48cc62484265fe6a1b8069ac8caff11d3a0
+--- a/lib/tasks.ts
++++ b/lib/tasks.ts
+@@ -166,3 +166,14 @@
+     deleted: nextTasks.length !== tasks.length,
+   };
+ }
++
++export function clearCompletedTasks(
++  tasks: readonly Task[],
++): { value: Task[]; cleared: boolean } {
++  const nextTasks = tasks.filter((task) => !task.completed);
++
++  return {
++    value: nextTasks,
++    cleared: nextTasks.length !== tasks.length,
++  };
++}
+
+
+thinking
+**Committing final log snapshot**
+codex
+I found one continuously updated run-log file still dirty after the progress commit, so I’m making one final log-sync commit to satisfy the clean-tree requirement.

@@ -1,0 +1,832 @@
+OpenAI Codex v0.106.0 (research preview)
+--------
+workdir: /Users/madsjorgensen/Projects/ralph/my-app
+model: gpt-5.3-codex
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: medium
+reasoning summaries: none
+session id: 019ca141-fa4e-71f0-a4e4-57957eeda6aa
+--------
+user
+# Build
+
+You are an autonomous coding agent. Your task is to complete the work for exactly one story and record the outcome.
+
+## Paths
+- PRD: /Users/madsjorgensen/Projects/ralph/my-app/.agents/tasks/prd-nextjs.json
+- AGENTS (optional): /Users/madsjorgensen/Projects/ralph/my-app/AGENTS.md
+- Progress Log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/progress.md
+- Guardrails: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/guardrails.md
+- Guardrails Reference: /Users/madsjorgensen/Projects/ralph/my-app/.agents/ralph/references/GUARDRAILS.md
+- Context Reference: /Users/madsjorgensen/Projects/ralph/my-app/.agents/ralph/references/CONTEXT_ENGINEERING.md
+- Errors Log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/errors.log
+- Activity Log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/activity.log
+- Activity Logger: /Users/madsjorgensen/Projects/ralph/my-app/ralph log
+- No-commit: true
+- Repo Root: /Users/madsjorgensen/Projects/ralph/my-app
+- Run ID: 20260227-233940-75253
+- Iteration: 1
+- Run Log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-233940-75253-iter-1.log
+- Run Summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-233940-75253-iter-1.md
+
+## Global Quality Gates (apply to every story)
+- npm run lint
+- npm run build
+
+## Selected Story (Do not change scope)
+ID: US-001
+Title: Define task domain model and validation utilities
+
+Story details:
+### US-001: Define task domain model and validation utilities
+Status: in_progress
+Depends on: None
+
+Description:
+As a developer, I want a typed task model and validation helpers so task behavior is consistent and testable across UI actions.
+
+Acceptance Criteria:
+- [ ] Create TypeScript task model and helper functions for create/update/toggle/delete-safe operations
+- [ ] Validation rejects empty or whitespace-only task titles and titles longer than 120 chars
+- [ ] Example: input '  Pay rent  ' is normalized to 'Pay rent' and accepted
+- [ ] Negative case: input '   ' returns validation error and task is not created
+- [ ] Run quality gates: npm run lint and npm run build
+
+
+If the story details are empty or missing, STOP and report that the PRD story format could not be parsed.
+
+## Rules (Non-Negotiable)
+- Implement **only** the work required to complete the selected story.
+- Complete all tasks associated with this story (and only this story).
+- Do NOT ask the user questions.
+- Do NOT change unrelated code.
+- Do NOT assume something is unimplemented — confirm by reading code.
+- Implement completely; no placeholders or stubs.
+- If No-commit is true, do NOT commit or push changes.
+- Do NOT edit the PRD JSON (status is handled by the loop).
+- All changes made during the run must be committed (including updates to progress/logs).
+ - Before committing, perform a final **security**, **performance**, and **regression** review of your changes.
+
+## Your Task (Do this in order)
+1. Read /Users/madsjorgensen/Projects/ralph/my-app/.ralph/guardrails.md before any code changes.
+2. Read /Users/madsjorgensen/Projects/ralph/my-app/.ralph/errors.log for repeated failures to avoid.
+3. Read /Users/madsjorgensen/Projects/ralph/my-app/.agents/tasks/prd-nextjs.json for global context (do not edit).
+4. Fully audit and read all necessary files to understand the task end-to-end before implementing. Do not assume missing functionality.
+5. If /Users/madsjorgensen/Projects/ralph/my-app/AGENTS.md exists, follow its build/test instructions.
+6. Implement only the tasks that belong to US-001.
+7. Run verification commands listed in the story, the global quality gates, and in /Users/madsjorgensen/Projects/ralph/my-app/AGENTS.md (if required).
+8. If the project has a build or dev workflow, run what applies:
+   - Build step (e.g., `npm run build`) if defined.
+   - Dev server (e.g., `npm run dev`, `wrangler dev`) if it is the normal validation path.
+   - Confirm no runtime/build errors in the console.
+9. Perform a brief audit before committing:
+   - **Security:** check for obvious vulnerabilities or unsafe handling introduced by your changes.
+   - **Performance:** check for avoidable regressions (extra queries, heavy loops, unnecessary re-renders).
+   - **Regression:** verify existing behavior that could be impacted still works.
+10. If No-commit is false, commit changes using the `$commit` skill.
+    - Stage everything: `git add -A`
+    - Confirm a clean working tree after commit: `git status --porcelain` should be empty.
+    - After committing, capture the commit hash and subject using:
+      `git show -s --format="%h %s" HEAD`.
+11. Append a progress entry to /Users/madsjorgensen/Projects/ralph/my-app/.ralph/progress.md with run/commit/test details (format below).
+    If No-commit is true, skip committing and note it in the progress entry.
+
+## Progress Entry Format (Append Only)
+```
+## [Date/Time] - US-001: Define task domain model and validation utilities
+Thread: [codex exec session id if available, otherwise leave blank]
+Run: 20260227-233940-75253 (iteration 1)
+Run log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-233940-75253-iter-1.log
+Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-233940-75253-iter-1.md
+- Guardrails reviewed: yes
+- No-commit run: true
+- Commit: <hash> <subject> (or `none` + reason)
+- Post-commit status: `clean` or list remaining files
+- Verification:
+  - Command: <exact command> -> PASS/FAIL
+  - Command: <exact command> -> PASS/FAIL
+- Files changed:
+  - <file path>
+  - <file path>
+- What was implemented
+- **Learnings for future iterations:**
+  - Patterns discovered
+  - Gotchas encountered
+  - Useful context
+---
+```
+
+## Completion Signal
+Only output the completion signal when the **selected story** is fully complete and verified.
+When the selected story is complete, output:
+<promise>COMPLETE</promise>
+
+Otherwise, end normally without the signal.
+
+## Additional Guardrails
+- When authoring documentation, capture the why (tests + implementation intent).
+- If you learn how to run/build/test the project, update /Users/madsjorgensen/Projects/ralph/my-app/AGENTS.md briefly (operational only).
+- Keep AGENTS operational only; progress notes belong in /Users/madsjorgensen/Projects/ralph/my-app/.ralph/progress.md.
+- If you hit repeated errors, log them in /Users/madsjorgensen/Projects/ralph/my-app/.ralph/errors.log and add a Sign to /Users/madsjorgensen/Projects/ralph/my-app/.ralph/guardrails.md using /Users/madsjorgensen/Projects/ralph/my-app/.agents/ralph/references/GUARDRAILS.md as the template.
+
+## Activity Logging (Required)
+Log major actions to /Users/madsjorgensen/Projects/ralph/my-app/.ralph/activity.log using the helper:
+```
+/Users/madsjorgensen/Projects/ralph/my-app/ralph log "message"
+```
+Log at least:
+- Start of work on the story
+- After major code changes
+- After tests/verification
+- After updating progress log
+
+## Browser Testing (Required for Frontend Stories)
+If the selected story changes UI, you MUST verify it in the browser:
+1. Load the `dev-browser` skill.
+2. Navigate to the relevant page.
+3. Verify the UI changes work as expected.
+4. Take a screenshot if helpful for the progress log.
+
+A frontend story is NOT complete until browser verification passes.
+
+mcp startup: no servers
+
+thinking
+**Starting execution and file inspection**
+codex
+I’ll execute US-001 only: first I’m reading guardrails, prior errors, PRD, and repo instructions, then I’ll audit current task-model code before making any edits.
+exec
+/bin/zsh -lc 'cat .ralph/errors.log' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc 'cat .agents/tasks/prd-nextjs.json' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc 'cat .ralph/guardrails.md' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc 'if [ -f AGENTS.md ]; then cat AGENTS.md; fi' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+# Error Log
+
+> Failures and repeated issues. Use this to add guardrails.
+
+ succeeded in 52ms:
+{
+  "version": 1,
+  "project": "Next.js Todo App",
+  "overview": "Build a focused todo app in the existing Next.js codebase so users can create, track, filter, and manage daily tasks with fast local persistence.",
+  "goals": [
+    "Allow users to add, complete, edit, and delete tasks",
+    "Support filtering by status (all, active, completed)",
+    "Persist tasks across browser refreshes without backend setup",
+    "Provide clear UI states for empty, populated, and invalid-input flows"
+  ],
+  "nonGoals": [
+    "User accounts or multi-user collaboration",
+    "Cloud sync or server-side database storage",
+    "Push notifications or reminders",
+    "Drag-and-drop reordering"
+  ],
+  "successMetrics": [
+    "A user can add a new task from the main route in under 10 seconds",
+    "Task state persists after refresh in the same browser",
+    "All quality gates pass on each completed story",
+ succeeded in 52ms:
+# Guardrails (Signs)
+
+> Lessons learned from failures. Read before acting.
+
+## Core Signs
+
+### Sign: Read Before Writing
+- **Trigger**: Before modifying any file
+- **Instruction**: Read the file first
+- **Added after**: Core principle
+
+### Sign: Test Before Commit
+- **Trigger**: Before committing changes
+- **Instruction**: Run required tests and verify outputs
+- **Added after**: Core principle
+
+---
+
+## Learned Signs
+
+ succeeded in 52ms:
+
+
+thinking
+**Planning activity log start**
+codex
+I’ve loaded the required control docs and the PRD story; next I’m auditing the codebase to find existing task-domain utilities and tests before touching anything.
+exec
+/bin/zsh -lc './ralph log "Run 20260227-233940-75253 iter 1: start US-001 domain model and validation audit"' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc 'ls -la' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc 'rg --files' in /Users/madsjorgensen/Projects/ralph/my-app exited 127 in 51ms:
+zsh:1: no such file or directory: ./ralph
+ succeeded in 52ms:
+total 512
+drwxr-xr-x@  19 madsjorgensen  staff     608 Feb 27 23:34 .
+drwxr-xr-x@   3 madsjorgensen  staff      96 Feb 27 23:30 ..
+drwxr-xr-x@   4 madsjorgensen  staff     128 Feb 27 23:34 .agents
+drwxr-xr-x@   3 madsjorgensen  staff      96 Feb 27 23:33 .codex
+drwxr-xr-x@  12 madsjorgensen  staff     384 Feb 27 23:33 .git
+-rw-r--r--@   1 madsjorgensen  staff     480 Feb 27 23:30 .gitignore
+drwxr-xr-x@   4 madsjorgensen  staff     128 Feb 27 23:32 .next
+drwxr-xr-x@   8 madsjorgensen  staff     256 Feb 27 23:39 .ralph
+-rw-r--r--@   1 madsjorgensen  staff    1450 Feb 27 23:30 README.md
+drwxr-xr-x@   6 madsjorgensen  staff     192 Feb 27 23:30 app
+-rw-r--r--@   1 madsjorgensen  staff     465 Feb 27 23:30 eslint.config.mjs
+-rw-r--r--@   1 madsjorgensen  staff     251 Feb 27 23:32 next-env.d.ts
+-rw-r--r--@   1 madsjorgensen  staff     133 Feb 27 23:30 next.config.ts
+drwxr-xr-x@ 292 madsjorgensen  staff    9344 Feb 27 23:31 node_modules
+-rw-r--r--@   1 madsjorgensen  staff  228963 Feb 27 23:31 package-lock.json
+-rw-r--r--@   1 madsjorgensen  staff     528 Feb 27 23:30 package.json
+-rw-r--r--@   1 madsjorgensen  staff      94 Feb 27 23:30 postcss.config.mjs
+drwxr-xr-x@   7 madsjorgensen  staff     224 Feb 27 23:30 public
+-rw-r--r--@   1 madsjorgensen  staff     666 Feb 27 23:30 tsconfig.json
+ succeeded in 52ms:
+next.config.ts
+eslint.config.mjs
+tsconfig.json
+package.json
+package-lock.json
+public/window.svg
+public/globe.svg
+public/next.svg
+public/vercel.svg
+public/file.svg
+README.md
+postcss.config.mjs
+app/globals.css
+app/page.tsx
+app/layout.tsx
+app/favicon.ico
+
+thinking
+**Investigating missing logging executable**
+codex
+I found no existing domain files yet; I’m now locating the activity logger command and checking the current app code so I can implement US-001 in the right place.
+exec
+/bin/zsh -lc 'cat package.json' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc "cat app/page.tsx && echo '---' && cat app/layout.tsx" in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc "ls -la .ralph && ls -la .agents && find . -maxdepth 2 -name 'ralph*' -print" in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+ succeeded in 50ms:
+import Image from "next/image";
+
+export default function Home() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+        <Image
+          className="dark:invert"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={100}
+          height={20}
+          priority
+        />
+        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
+          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
+            To get started, edit the page.tsx file.
+          </h1>
+          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+            Looking for a starting point or more instructions? Head over to{" "}
+ succeeded in 50ms:
+total 32
+drwxr-xr-x@  8 madsjorgensen  staff  256 Feb 27 23:39 .
+drwxr-xr-x@ 19 madsjorgensen  staff  608 Feb 27 23:34 ..
+drwxr-xr-x@  6 madsjorgensen  staff  192 Feb 27 23:39 .tmp
+-rw-r--r--@  1 madsjorgensen  staff  109 Feb 27 23:39 activity.log
+-rw-r--r--@  1 madsjorgensen  staff   74 Feb 27 23:39 errors.log
+-rw-r--r--@  1 madsjorgensen  staff  421 Feb 27 23:39 guardrails.md
+-rw-r--r--@  1 madsjorgensen  staff  111 Feb 27 23:39 progress.md
+drwxr-xr-x@  3 madsjorgensen  staff   96 Feb 27 23:39 runs
+total 0
+drwxr-xr-x@  4 madsjorgensen  staff  128 Feb 27 23:34 .
+drwxr-xr-x@ 19 madsjorgensen  staff  608 Feb 27 23:34 ..
+drwxr-xr-x@ 11 madsjorgensen  staff  352 Feb 27 23:32 ralph
+drwxr-xr-x@  3 madsjorgensen  staff   96 Feb 27 23:35 tasks
+./.agents/ralph
+
+thinking
+**Locating logger implementation**
+codex
+I confirmed the app is still scaffold state, so US-001 will be pure domain utilities. I’m locating the `ralph log` helper command path so activity logging is recorded correctly.
+exec
+/bin/zsh -lc 'cat .ralph/activity.log' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc 'which ralph || true && ls -la /Users/madsjorgensen/Projects/ralph || true' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc 'find .agents/ralph -maxdepth 3 -type f | sort' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+# Activity Log
+
+## Run Summary
+
+## Events
+
+[2026-02-27 23:39:41] ITERATION 1 start (mode=build story=US-001)
+ succeeded in 51ms:
+/opt/homebrew/bin/ralph
+total 0
+drwxr-xr-x@  3 madsjorgensen  staff   96 Feb 27 23:30 .
+drwxr-xr-x  18 madsjorgensen  staff  576 Feb 27 17:47 ..
+drwxr-xr-x@ 19 madsjorgensen  staff  608 Feb 27 23:34 my-app
+ succeeded in 50ms:
+.agents/ralph/PROMPT_build.md
+.agents/ralph/README.md
+.agents/ralph/agents.sh
+.agents/ralph/config.sh
+.agents/ralph/diagram.svg
+.agents/ralph/log-activity.sh
+.agents/ralph/loop.sh
+.agents/ralph/ralph.webp
+.agents/ralph/references/CONTEXT_ENGINEERING.md
+.agents/ralph/references/GUARDRAILS.md
+
+thinking
+**Assessing project structure and dependencies**
+exec
+/bin/zsh -lc 'cat tsconfig.json' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc "rg -n \"Task|todo|validate|domain|model\" app . --glob '"'!node_modules/**'"'" in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc "cat .agents/ralph/references/CONTEXT_ENGINEERING.md && echo '---' && cat .agents/ralph/references/GUARDRAILS.md" in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 51ms:
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+ exited 1 in 50ms:
+
+ succeeded in 51ms:
+# Context Engineering Reference
+
+This document explains the malloc/free metaphor for LLM context management that underlies the Ralph technique.
+
+## The malloc() Metaphor
+
+In traditional programming:
+- `malloc()` allocates memory
+- `free()` releases memory
+- Memory leaks occur when you allocate without freeing
+
+In LLM context:
+- Reading files, receiving responses, tool outputs = `malloc()`
+- **There is no `free()`** - context cannot be released
+- The only way to "free" is to start a new conversation
+
+## Why This Matters
+
+### Context Pollution
+
+
+thinking
+**Integrating logging with Ralph**
+exec
+/bin/zsh -lc 'ralph log "Run 20260227-233940-75253 iter 1: completed initial audit and confirmed scaffold baseline"' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+Using local templates: /Users/madsjorgensen/Projects/ralph/my-app/.agents/ralph
+
+thinking
+**Designing domain model and helpers**
+codex
+I’ve identified this as a clean-slate domain-layer story with no existing task utilities. I’ll now add a focused `lib` domain module with typed create/update/toggle/delete-safe helpers plus validation behavior matching the acceptance examples.
+exec
+/bin/zsh -lc 'cat eslint.config.mjs' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc 'cat README.md' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc 'cat .ralph/progress.md' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+ succeeded in 52ms:
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
+
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  // Override default ignores of eslint-config-next.
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
+]);
+
+export default eslintConfig;
+ succeeded in 50ms:
+# Progress Log
+Started: Fri Feb 27 23:39:40 CET 2026
+
+## Codebase Patterns
+- (add reusable patterns here)
+
+---
+
+thinking
+**Designing pure task helpers**
+codex
+I’m starting the code change now: adding a new typed domain module with title normalization/validation and pure create/update/toggle/delete-safe helpers, keeping it isolated from UI scope.
+exec
+/bin/zsh -lc "mkdir -p lib && cat > lib/tasks.ts <<'EOF'
+export const TASK_TITLE_MAX_LENGTH = 120;
+
+export type Task = {
+  id: string;
+  title: string;
+  completed: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TaskTitleValidationErrorCode = \"EMPTY_TITLE\" | \"TITLE_TOO_LONG\";
+
+export type TaskTitleValidationError = {
+  code: TaskTitleValidationErrorCode;
+  message: string;
+};
+
+export type TaskTitleValidationResult =
+  | { ok: true; value: string }
+  | { ok: false; error: TaskTitleValidationError };
+
+export type TaskMutationNotFoundError = {
+  code: \"TASK_NOT_FOUND\";
+  message: string;
+};
+
+export type IdGenerator = () => string;
+
+const defaultIdGenerator: IdGenerator = () => crypto.randomUUID();
+
+const toIsoString = (date: Date) => date.toISOString();
+
+export function normalizeTaskTitle(input: string): string {
+  return input.trim();
+}
+
+export function validateTaskTitle(input: string): TaskTitleValidationResult {
+  const normalized = normalizeTaskTitle(input);
+
+  if (normalized.length === 0) {
+    return {
+      ok: false,
+      error: {
+        code: \"EMPTY_TITLE\",
+        message: \"Task title must not be empty.\",
+      },
+    };
+  }
+
+  if (normalized.length > TASK_TITLE_MAX_LENGTH) {
+    return {
+      ok: false,
+      error: {
+        code: \"TITLE_TOO_LONG\",
+        message: "'`Task title must be ${TASK_TITLE_MAX_LENGTH} characters or fewer.`,
+      },
+    };
+  }
+
+  return { ok: true, value: normalized };
+}
+
+export function createTask(
+  input: string,
+  options?: {
+    now?: Date;
+    idGenerator?: IdGenerator;
+  },
+): { ok: true; value: Task } | { ok: false; error: TaskTitleValidationError } {
+  const validation = validateTaskTitle(input);
+  if (!validation.ok) {
+    return validation;
+  }
+
+  const now = options?.now ?? new Date();
+  const idGenerator = options?.idGenerator ?? defaultIdGenerator;
+
+  return {
+    ok: true,
+    value: {
+      id: idGenerator(),
+      title: validation.value,
+      completed: false,
+      createdAt: toIsoString(now),
+      updatedAt: toIsoString(now),
+    },
+  };
+}
+
+export function updateTaskTitle(
+  tasks: readonly Task[],
+  taskId: string,
+  input: string,
+  now: Date = new Date(),
+):
+  | { ok: true; value: Task[] }
+  | { ok: false; error: TaskTitleValidationError | TaskMutationNotFoundError } {
+  const validation = validateTaskTitle(input);
+  if (!validation.ok) {
+    return validation;
+  }
+
+  let found = false;
+  const updatedTasks = tasks.map((task) => {
+    if (task.id !== taskId) {
+      return task;
+    }
+
+    found = true;
+
+    return {
+      ...task,
+      title: validation.value,
+      updatedAt: toIsoString(now),
+    };
+  });
+
+  if (!found) {
+    return {
+      ok: false,
+      error: {
+        code: "TASK_NOT_FOUND",
+        message: `Task with id '"'"'${taskId}'"' was not found."'`,
+      },
+    };
+  }
+
+  return { ok: true, value: updatedTasks };
+}
+
+export function toggleTaskCompletion(
+  tasks: readonly Task[],
+  taskId: string,
+  now: Date = new Date(),
+): { value: Task[]; changed: boolean } {
+  let changed = false;
+
+  const updatedTasks = tasks.map((task) => {
+    if (task.id !== taskId) {
+      return task;
+    }
+
+    changed = true;
+
+    return {
+      ...task,
+      completed: !task.completed,
+      updatedAt: toIsoString(now),
+    };
+  });
+
+  return {
+    value: updatedTasks,
+    changed,
+  };
+}
+
+export function deleteTaskById(
+  tasks: readonly Task[],
+  taskId: string,
+): { value: Task[]; deleted: boolean } {
+  const nextTasks = tasks.filter((task) => task.id !== taskId);
+
+  return {
+    value: nextTasks,
+    deleted: nextTasks.length !== tasks.length,
+  };
+}
+EOF' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 51ms:
+
+exec
+/bin/zsh -lc 'ralph log "US-001: added lib/tasks.ts with typed Task model and create/update/toggle/delete + validation utilities"' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+Using local templates: /Users/madsjorgensen/Projects/ralph/my-app/.agents/ralph
+
+thinking
+**Planning lint and build runs**
+codex
+The domain module is in place. I’m running the required quality gates now (`npm run lint` and `npm run build`) and then I’ll do a quick runtime check via the dev workflow.
+exec
+/bin/zsh -lc 'npm run build' in /Users/madsjorgensen/Projects/ralph/my-appexec
+/bin/zsh -lc 'npm run lint' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 2.69s:
+
+> my-app@0.1.0 lint
+> eslint
+
+
+/Users/madsjorgensen/Projects/ralph/my-app/.codex/skills/dev-browser/src/client.ts
+  416:11  warning  Unused eslint-disable directive (no problems were reported from 'no-eval')
+
+/Users/madsjorgensen/Projects/ralph/my-app/.codex/skills/dev-browser/src/relay.ts
+   50:11  warning  'ExtensionCommandMessage' is defined but never used  @typescript-eslint/no-unused-vars
+  454:32  warning  '_ws' is defined but never used                      @typescript-eslint/no-unused-vars
+
+/Users/madsjorgensen/Projects/ralph/my-app/.codex/skills/dev-browser/src/snapshot/__tests__/snapshot.test.ts
+  38:7  warning  Unused eslint-disable directive (no problems were reported from 'no-eval')
+
+/Users/madsjorgensen/Projects/ralph/my-app/.codex/skills/dev-browser/src/snapshot/browser-script.ts
+  12:13  warning  'fs' is defined but never used                    @typescript-eslint/no-unused-vars
+  29:9   warning  'snapshotDir' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 6 problems (0 errors, 6 warnings)
+ succeeded in 4.22s:
+
+> my-app@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1143.8ms
+  Running TypeScript ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/4) ...
+  Generating static pages using 9 workers (1/4) 
+  Generating static pages using 9 workers (2/4) 
+  Generating static pages using 9 workers (3/4) 
+✓ Generating static pages using 9 workers (4/4) in 200.0ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+└ ○ /_not-found
+
+thinking
+**Planning dev server test with timeout**
+exec
+/bin/zsh -lc 'npm run dev -- --port 3001' in /Users/madsjorgensen/Projects/ralph/my-app
+thinking
+**Stopping session and checking errors**
+ succeeded in 10.25s:
+
+> my-app@0.1.0 dev
+> next dev --port 3001
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.68.51:3001
+
+✓ Starting...
+✓ Ready in 430ms
+^C[?25h
+⠙[1G[0K
+
+thinking
+**Adding post-test logging**
+exec
+/bin/zsh -lc 'ralph log "US-001: verification complete (lint, build, and dev startup check)"' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 51ms:
+Using local templates: /Users/madsjorgensen/Projects/ralph/my-app/.agents/ralph
+
+thinking
+**Checking git diff for changes**
+exec
+/bin/zsh -lc 'git status --short && git diff -- lib/tasks.ts .ralph/activity.log' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+?? .agents/
+?? .codex/
+?? .ralph/
+?? lib/
+
+thinking
+**Scoping progress entry updates**
+codex
+I’ve finished verification and will now append the required progress entry, including no-commit status, command results, and the implementation summary for US-001.
+exec
+/bin/zsh -lc 'date "+%Y-%m-%d %H:%M:%S %Z"' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 51ms:
+2026-02-27 23:41:20 CET
+
+thinking
+**Planning precise git status parsing**
+exec
+/bin/zsh -lc 'git status --porcelain' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+?? .agents/
+?? .codex/
+?? .ralph/
+?? lib/
+
+thinking
+**Appending new entry**
+exec
+/bin/zsh -lc "cat >> .ralph/progress.md <<'EOF'
+## [2026-02-27 23:41:20 CET] - US-001: Define task domain model and validation utilities
+Thread: 64019
+Run: 20260227-233940-75253 (iteration 1)
+Run log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-233940-75253-iter-1.log
+Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-233940-75253-iter-1.md
+- Guardrails reviewed: yes
+- No-commit run: true
+- Commit: none (No-commit run is true)
+- Post-commit status: ?? .agents/, ?? .codex/, ?? .ralph/, ?? lib/
+- Verification:
+  - Command: npm run lint -> PASS
+  - Command: npm run build -> PASS
+  - Command: npm run dev -- --port 3001 -> PASS
+- Files changed:
+  - lib/tasks.ts
+  - .ralph/activity.log
+  - .ralph/progress.md
+- What was implemented
+  - Added a typed "'`Task` domain model with title constraints (`TASK_TITLE_MAX_LENGTH = 120`).
+  - Added `normalizeTaskTitle` and `validateTaskTitle` utilities that trim input, reject whitespace-only titles, and reject titles longer than 120 characters.
+  - Added pure helper functions for CRUD-adjacent behavior:
+    - `createTask` (normalized valid title -> created task)
+    - `updateTaskTitle` (validates input, preserves task identity fields)
+    - `toggleTaskCompletion` (safe no-op when task id is missing)
+    - `deleteTaskById` (safe no-op when task id is missing)
+  - Validation behavior satisfies acceptance examples (`"  Pay rent  "` normalizes/accepts, `"   "` returns validation error and no task creation).
+- **Learnings for future iterations:**
+  - Patterns discovered
+  - Keep task-domain utilities as pure functions to simplify UI integration and future tests.
+  - Gotchas encountered
+  - `npm run lint` currently scans `.codex/skills` and reports pre-existing warnings unrelated to story scope.
+  - Useful context
+  - Next.js scaffold had no prior task domain, so `lib/tasks.ts` is the initial source-of-truth module.
+---
+EOF' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 51ms:
+
+
+thinking
+**Planning activity log update**
+exec
+/bin/zsh -lc 'ralph log "US-001: appended progress entry to .ralph/progress.md"' in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 51ms:
+Using local templates: /Users/madsjorgensen/Projects/ralph/my-app/.agents/ralph
+
+thinking
+**Planning final review steps**
+exec
+/bin/zsh -lc "cat lib/tasks.ts && echo '---' && tail -n 80 .ralph/activity.log && echo '---' && tail -n 80 .ralph/progress.md" in /Users/madsjorgensen/Projects/ralph/my-app succeeded in 52ms:
+export const TASK_TITLE_MAX_LENGTH = 120;
+
+export type Task = {
+  id: string;
+  title: string;
+  completed: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TaskTitleValidationErrorCode = "EMPTY_TITLE" | "TITLE_TOO_LONG";
+
+export type TaskTitleValidationError = {
+  code: TaskTitleValidationErrorCode;
+  message: string;
+};
+
+export type TaskTitleValidationResult =
+  | { ok: true; value: string }
+  | { ok: false; error: TaskTitleValidationError };
+
+thinking
+**Finalizing completion signal**
+codex
+<promise>COMPLETE</promise>
+tokens used
+26,694
+<promise>COMPLETE</promise>

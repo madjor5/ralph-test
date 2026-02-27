@@ -1,0 +1,194 @@
+{
+  "version": 1,
+  "project": "Next.js Todo App",
+  "overview": "Build a focused todo app in the existing Next.js codebase so users can create, track, filter, and manage daily tasks with fast local persistence.",
+  "goals": [
+    "Allow users to add, complete, edit, and delete tasks",
+    "Support filtering by status (all, active, completed)",
+    "Persist tasks across browser refreshes without backend setup",
+    "Provide clear UI states for empty, populated, and invalid-input flows"
+  ],
+  "nonGoals": [
+    "User accounts or multi-user collaboration",
+    "Cloud sync or server-side database storage",
+    "Push notifications or reminders",
+    "Drag-and-drop reordering"
+  ],
+  "successMetrics": [
+    "A user can add a new task from the main route in under 10 seconds",
+    "Task state persists after refresh in the same browser",
+    "All quality gates pass on each completed story",
+    "No console errors during core CRUD task flows"
+  ],
+  "openQuestions": [
+    "Should completed tasks remain visible by default or be auto-collapsed?",
+    "Should deleting a task require confirmation for all cases or only bulk delete?",
+    "Is keyboard-only accessibility (full tab/enter/space support) required for this milestone?",
+    "Should persistence remain localStorage-only or move to a backend in a later phase?"
+  ],
+  "stack": {
+    "framework": "Next.js 16 (App Router) + React 19 + TypeScript",
+    "hosting": "Node runtime (default Next.js deployment target)",
+    "database": "None (browser localStorage persistence)",
+    "auth": "No authentication for this feature"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "name": "Todo Home",
+      "purpose": "Primary page for task CRUD operations and filtering"
+    }
+  ],
+  "uiNotes": [
+    "Main route / should render: app title, task input form, filter controls, task list, and task summary",
+    "Required UI states on /: empty list state, populated list state, input validation error state, and loading/hydration-safe initial state",
+    "Task row component should include completion checkbox, task title, edit action, and delete action",
+    "Filter controls should visibly indicate active filter and update the rendered list immediately"
+  ],
+  "dataModel": [
+    {
+      "entity": "Task",
+      "fields": [
+        "id:string",
+        "title:string",
+        "completed:boolean",
+        "createdAt:string (ISO timestamp)",
+        "updatedAt:string (ISO timestamp)"
+      ]
+    }
+  ],
+  "importFormat": {
+    "description": "No import file required for this MVP. Task data is created in-app and persisted to localStorage as JSON array of Task objects.",
+    "example": {
+      "tasks": [
+        {
+          "id": "task_001",
+          "title": "Buy groceries",
+          "completed": false,
+          "createdAt": "2026-02-27T10:00:00.000Z",
+          "updatedAt": "2026-02-27T10:00:00.000Z"
+        }
+      ]
+    }
+  },
+  "rules": [
+    "Task title must be trimmed and between 1 and 120 characters",
+    "Task IDs must be unique within persisted collection",
+    "Toggling completion updates completed flag and updatedAt",
+    "Editing a task keeps its id and createdAt while updating title and updatedAt",
+    "Deleting a non-existent task id should be a no-op and must not crash UI",
+    "localStorage parse failures should fall back to an empty task list"
+  ],
+  "qualityGates": [
+    "npm run lint",
+    "npm run build"
+  ],
+  "stories": [
+    {
+      "id": "US-001",
+      "title": "Define task domain model and validation utilities",
+      "status": "done",
+      "dependsOn": [],
+      "description": "As a developer, I want a typed task model and validation helpers so task behavior is consistent and testable across UI actions.",
+      "acceptanceCriteria": [
+        "Create TypeScript task model and helper functions for create/update/toggle/delete-safe operations",
+        "Validation rejects empty or whitespace-only task titles and titles longer than 120 chars",
+        "Example: input '  Pay rent  ' is normalized to 'Pay rent' and accepted",
+        "Negative case: input '   ' returns validation error and task is not created",
+        "Run quality gates: npm run lint and npm run build"
+      ],
+      "startedAt": "2026-02-27T22:39:41.336058+00:00",
+      "completedAt": "2026-02-27T22:41:40.784382+00:00",
+      "updatedAt": "2026-02-27T22:41:40.784230+00:00"
+    },
+    {
+      "id": "US-002",
+      "title": "Implement local persistence repository for tasks",
+      "status": "in_progress",
+      "dependsOn": [
+        "US-001"
+      ],
+      "description": "As a user, I want my tasks to persist after refresh so I do not lose progress.",
+      "acceptanceCriteria": [
+        "Implement read/write task persistence to localStorage with a stable storage key",
+        "Repository returns empty list when storage key is missing",
+        "Example: saving two tasks and refreshing loads the same two tasks",
+        "Negative case: corrupted JSON in storage is handled gracefully by returning [] and avoiding runtime crash",
+        "Run quality gates: npm run lint and npm run build"
+      ],
+      "startedAt": "2026-02-27T22:49:14.008092+00:00",
+      "completedAt": null,
+      "updatedAt": "2026-02-27T22:49:14.008256+00:00"
+    },
+    {
+      "id": "US-003",
+      "title": "Build todo UI on root route with core create and list flows",
+      "status": "open",
+      "dependsOn": [
+        "US-001",
+        "US-002"
+      ],
+      "description": "As a user, I want a clear home screen for creating and viewing tasks so I can manage my todos quickly.",
+      "acceptanceCriteria": [
+        "Route / renders Todo Home with components: header, task input form, task list, and empty-state message",
+        "Submitting valid input creates a new task and renders it immediately in the list",
+        "UI states on / include: empty list state before tasks exist, populated state after creation, and inline validation error state for invalid input",
+        "Example: entering 'Finish report' and submitting displays a new unchecked task row",
+        "Negative case: submitting an empty title keeps list unchanged and shows validation feedback",
+        "Run quality gates: npm run lint and npm run build"
+      ]
+    },
+    {
+      "id": "US-004",
+      "title": "Add complete/incomplete toggling and status filters",
+      "status": "open",
+      "dependsOn": [
+        "US-003"
+      ],
+      "description": "As a user, I want to mark tasks complete and filter by status so I can focus on remaining work.",
+      "acceptanceCriteria": [
+        "Each task row includes a checkbox/button to toggle completed state",
+        "Filter controls support all, active, and completed views on route /",
+        "Active filter state is visually distinct and list updates without full page reload",
+        "Example: with 3 tasks (2 completed), selecting 'Active' shows only the 1 incomplete task",
+        "Negative case: selecting 'Completed' when none are completed shows empty filtered-state message, not a crash",
+        "Run quality gates: npm run lint and npm run build"
+      ]
+    },
+    {
+      "id": "US-005",
+      "title": "Enable edit and delete task actions",
+      "status": "open",
+      "dependsOn": [
+        "US-003"
+      ],
+      "description": "As a user, I want to update or remove tasks so my list stays accurate.",
+      "acceptanceCriteria": [
+        "Each task row provides edit and delete controls on route /",
+        "Edit flow allows updating title while preserving task id and createdAt",
+        "Delete flow removes task from UI and persistence layer",
+        "Example: editing 'Call bank' to 'Call bank at 3pm' updates the same task row",
+        "Negative case: attempting to save edit with blank title shows validation error and keeps prior value",
+        "Run quality gates: npm run lint and npm run build"
+      ]
+    },
+    {
+      "id": "US-006",
+      "title": "Add task summary and clear-completed action",
+      "status": "open",
+      "dependsOn": [
+        "US-004",
+        "US-005"
+      ],
+      "description": "As a user, I want a quick summary and bulk cleanup so I can manage completed work efficiently.",
+      "acceptanceCriteria": [
+        "Route / shows summary counts for total, active, and completed tasks",
+        "Provide clear-completed action that removes only completed tasks",
+        "After clear-completed, filters and counts remain accurate",
+        "Example: with 5 tasks (3 completed), clear-completed leaves 2 active tasks",
+        "Negative case: triggering clear-completed when zero completed tasks performs no-op without error",
+        "Run quality gates: npm run lint and npm run build"
+      ]
+    }
+  ]
+}

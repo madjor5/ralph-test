@@ -68,3 +68,41 @@ Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227
   - Useful context
   - Task domain typing from `lib/tasks.ts` can be reused as runtime guard shape for persistence parsing.
 ---
+## [2026-02-27 23:57:04] - US-003: Build todo UI on root route with core create and list flows
+Thread: 
+Run: 20260227-235223-77231 (iteration 1)
+Run log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-235223-77231-iter-1.log
+Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-235223-77231-iter-1.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: 238c49b feat(todos): build root create and list UI
+- Post-commit status: clean
+- Verification:
+  - Command: npm run lint -> PASS
+  - Command: npm run build -> PASS
+  - Command: dev-browser tsx verification script for / -> PASS
+- Files changed:
+  - app/page.tsx
+  - .agents/tasks/prd-nextjs.json
+  - .ralph/activity.log
+  - .ralph/errors.log
+  - .ralph/runs/run-20260227-234913-76351-iter-1.log
+  - .ralph/runs/run-20260227-234913-76351-iter-1.md
+  - .ralph/runs/run-20260227-235223-77231-iter-1.log
+  - .ralph/.tmp/prompt-20260227-235223-77231-1.md
+  - .ralph/.tmp/story-20260227-235223-77231-1.json
+  - .ralph/.tmp/story-20260227-235223-77231-1.md
+- What was implemented
+  - Replaced the default root page with a Todo Home UI containing header, task input form, task list section, and empty-state message.
+  - Wired create flow to `createTask` validation and immediate list rendering, including unchecked checkbox state for new tasks.
+  - Added inline validation feedback for invalid empty/whitespace submissions while keeping list unchanged.
+  - Hooked the page into localStorage persistence via `loadTasks` and `saveTasks`.
+  - Verified UI behavior in browser for empty state, successful create (`Finish report`), and invalid submission handling.
+- **Learnings for future iterations:**
+  - Patterns discovered
+  - Reusing domain/repository utilities in client UI keeps story scope tight and consistent.
+  - Gotchas encountered
+  - Dev-browser startup may install Playwright and can leave profile/cache artifacts that should be removed before final commit.
+  - Useful context
+  - Lint currently reports non-blocking warnings inside `.codex/skills/dev-browser`; app code must remain warning/error free for required gates.
+---

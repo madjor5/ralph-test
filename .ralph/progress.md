@@ -145,3 +145,35 @@ Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227
   - Useful context
   - `npm run lint` still includes pre-existing warnings under `.codex/skills/dev-browser`; app story files remained lint-clean on errors.
 ---
+## [2026-02-28 00:14:23 +0100] - US-005: Enable edit and delete task actions
+Thread: 
+Run: 20260228-000755-80783 (iteration 1)
+Run log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260228-000755-80783-iter-1.log
+Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260228-000755-80783-iter-1.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: 2589ca8 feat(tasks): add task edit and delete actions
+- Post-commit status: .ralph/runs/run-20260228-000755-80783-iter-1.log
+- Verification:
+  - Command: npm run lint -> PASS
+  - Command: npm run build -> PASS
+  - Command: cd .codex/skills/dev-browser && npx tsx <<'EOF' ... EOF -> PASS
+- Files changed:
+  - app/page.tsx
+  - .ralph/activity.log
+  - .ralph/progress.md
+  - .ralph/runs/run-20260228-000755-80783-iter-1.log
+- What was implemented
+  - Added Edit and Delete controls to each task row on `/`.
+  - Added inline edit flow using `updateTaskTitle` so `id` and `createdAt` are preserved while `title` and `updatedAt` update.
+  - Added delete flow using `deleteTaskById` so removals update UI and persisted `localStorage` state.
+  - Added inline validation for edit save; blank titles show an error and keep previous persisted value unchanged.
+  - Verified browser flow with dev-browser, including edit example (`Call bank` -> `Call bank at 3pm`) and negative blank-save behavior.
+- **Learnings for future iterations:**
+  - Patterns discovered
+  - Existing task domain utilities already covered US-005 mutation semantics; UI wiring in `app/page.tsx` was the only gap.
+  - Gotchas encountered
+  - Next.js route announcer also uses `role="alert"`, so browser assertions should target specific validation text.
+  - Useful context
+  - `ralph` activity logging command is available as `/opt/homebrew/bin/ralph` in this environment.
+---

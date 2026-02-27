@@ -106,3 +106,42 @@ Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227
   - Useful context
   - Lint currently reports non-blocking warnings inside `.codex/skills/dev-browser`; app code must remain warning/error free for required gates.
 ---
+## [2026-02-28 00:05:30 CET] - US-004: Add complete/incomplete toggling and status filters
+Thread: 
+Run: 20260227-235951-78972 (iteration 1)
+Run log: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-235951-78972-iter-1.log
+Run summary: /Users/madsjorgensen/Projects/ralph/my-app/.ralph/runs/run-20260227-235951-78972-iter-1.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: 3c2205c feat(todos): add completion toggle and filters
+- Post-commit status: M .ralph/runs/run-20260227-235951-78972-iter-1.log
+- Verification:
+  - Command: npm run lint -> PASS
+  - Command: npm run build -> PASS
+  - Command: npm run dev (startup + GET / check) -> PASS
+  - Command: cd .codex/skills/dev-browser && npx tsx (US-004 verification script) -> PASS
+- Files changed:
+  - app/page.tsx
+  - .agents/tasks/prd-nextjs.json
+  - .ralph/activity.log
+  - .ralph/errors.log
+  - .ralph/runs/run-20260227-235223-77231-iter-1.log
+  - .ralph/runs/run-20260227-235223-77231-iter-1.md
+  - .ralph/runs/run-20260227-235951-78972-iter-1.log
+  - .ralph/.tmp/prompt-20260227-235951-78972-1.md
+  - .ralph/.tmp/story-20260227-235951-78972-1.json
+  - .ralph/.tmp/story-20260227-235951-78972-1.md
+- What was implemented
+  - Added checkbox toggling per task row by wiring each checkbox to `toggleTaskCompletion` and state updates.
+  - Added `all`, `active`, and `completed` filter controls on `/` with active-state styling and `aria-pressed` state.
+  - Switched list rendering to filtered task state so list updates in-place without page reload.
+  - Added filter-aware empty-state messaging, including the negative case message when `Completed` has zero matches.
+  - Verified browser behavior for the acceptance example: with three tasks and two completed, `Active` shows exactly one incomplete task.
+- **Learnings for future iterations:**
+  - Patterns discovered
+  - Keep filter derivation in render state from canonical `tasks` to avoid persistence drift.
+  - Gotchas encountered
+  - Dev-browser interactions with rapidly changing checkbox rows are more stable with click/loop assertions than `uncheck()` on disappearing elements.
+  - Useful context
+  - `npm run lint` still includes pre-existing warnings under `.codex/skills/dev-browser`; app story files remained lint-clean on errors.
+---

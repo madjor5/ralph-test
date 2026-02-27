@@ -1,6 +1,7 @@
 # Activity Log
 
 ## Run Summary
+- 2026-02-28 00:15:18 | run=20260228-000755-80783 | iter=1 | mode=build | story=US-005 | duration=443s | status=success
 - 2026-02-28 00:06:18 | run=20260227-235951-78972 | iter=1 | mode=build | story=US-004 | duration=387s | status=success
 - 2026-02-27 23:57:59 | run=20260227-235223-77231 | iter=1 | mode=build | story=US-003 | duration=336s | status=success
 - 2026-02-27 23:51:29 | run=20260227-234913-76351 | iter=1 | mode=build | story=US-002 | duration=136s | status=success
@@ -40,3 +41,7 @@
 [2026-02-28 00:09:05] US-005 major code change: added edit/delete flows in app/page.tsx
 [2026-02-28 00:12:22] US-005 verification complete: lint/build/browser checks passed
 [2026-02-28 00:14:35] US-005 progress entry appended
+[2026-02-28 00:15:18] ITERATION 1 end (duration=443s)
+[2026-02-28 00:15:21] ITERATION 2 start (mode=build story=US-006)
+[2026-02-28 00:16:24] US-006 iteration 2: implemented summary counts and clear-completed action in app/page.tsx and lib/tasks.ts
+[2026-02-28 00:17:56] US-006 iteration 2: verification complete (lint, build, browser flow with summary + clear-completed + no-op)

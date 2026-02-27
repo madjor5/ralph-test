@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useId, useState } from "react";
 import { loadTasks, saveTasks } from "@/lib/taskRepository";
 import {
+  clearCompletedTasks,
   createTask,
   deleteTaskById,
   type Task,
@@ -96,6 +97,12 @@ export default function Home() {
 
     return true;
   });
+  const completedTasksCount = tasks.filter((task) => task.completed).length;
+  const activeTasksCount = tasks.length - completedTasksCount;
+
+  const handleClearCompleted = () => {
+    setTasks((currentTasks) => clearCompletedTasks(currentTasks).value);
+  };
 
   const getEmptyStateMessage = () => {
     if (tasks.length === 0) {
@@ -183,6 +190,20 @@ export default function Home() {
                 );
               })}
             </div>
+          </div>
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+            <p>
+              Total: <span className="font-semibold">{tasks.length}</span> | Active:{" "}
+              <span className="font-semibold">{activeTasksCount}</span> | Completed:{" "}
+              <span className="font-semibold">{completedTasksCount}</span>
+            </p>
+            <button
+              type="button"
+              onClick={handleClearCompleted}
+              className="rounded-lg border border-slate-300 px-3 py-1.5 font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
+            >
+              Clear completed
+            </button>
           </div>
           {filteredTasks.length === 0 ? (
             <p className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600">

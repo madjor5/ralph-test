@@ -166,3 +166,14 @@ export function deleteTaskById(
     deleted: nextTasks.length !== tasks.length,
   };
 }
+
+export function clearCompletedTasks(
+  tasks: readonly Task[],
+): { value: Task[]; cleared: boolean } {
+  const nextTasks = tasks.filter((task) => !task.completed);
+
+  return {
+    value: nextTasks,
+    cleared: nextTasks.length !== tasks.length,
+  };
+}
